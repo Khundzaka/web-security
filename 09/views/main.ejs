@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+</head>
+<body>
+    You have visited this page <%=views%> times.
+    You are: <%=currentUser%>
+    qparam: <%=qparam%>
+</body>
+<script>
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    auth = (() => {
+        console.log(getCookie('XSRF-TOKEN'));
+        fetch('/auth', {
+            method: 'POST',
+            body: JSON.stringify({
+                username: 'giorgi',
+                password: 'websec',
+            }),
+            headers: {'Content-Type': 'application/json', 'XSRF-TOKEN': getCookie('XSRF-TOKEN')},
+        }).then((response) => {
+            console.log(response);
+            response.json().then(result => {
+                console.log(result);
+            })
+        });
+        
+    })
+    auth();
+</script>
+</html>
